@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- This page includes the following elements: -->
+<!-- html, head, body, meta, title, form, select, optgroup, option -->
+
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Archive</title>
+    <link rel="icon" href="img/logo.ico">
+    <link rel="stylesheet" type="text/css" href="style/general.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style media="screen">
+        img{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <ul class="navbar">
+            <li><a href="/item.html">Item</a></li>
+            <li><a href="/yearly.html">Yearly</a></li>
+            <li><b><a href="/archive.html">Archive</a></b></li>
+            <li id="log_out"><a href="/index.html">Log out</a></li>
+        </ul>
+    </header>
+    <form class="" action="list.html" method="post">
+        <label for="catagory">Catagory: </label>
+        <select name="catagory" id="catagory">
+            <option value="all">All</option>
+            <optgroup label="Colors">
+                <option value="gray">Gray</option>
+                <option value="red">Red</option>
+                <option value="orange">Orange</option>
+                <option value="yellow">Yellow</option>
+                <option value="blue">Blue</option>
+                <option value="purple">Purple</option>
+            </optgroup>
+            <optgroup label="Priority">
+                <option value="high">High</option>
+                <option value="med">Medium</option>
+                <option value="low">Low</option>
+            </optgroup>
+        </select>
+    </form>
+    <br><hr>
+    <h1>welcome to my temporary gallery of images!</h1>
+    <p>Here's a cool svg image</p>
+    <img src="img/svg.svg" alt="svg" width="200">
+    <p>Here's a cool gif image</p>
+    <img src="https://media.giphy.com/media/QeuIjgyfsHp6w/giphy.gif" alt="gif" width="200">
+    <p>Here's a cool jepg image</p>
+    <img src="https://mumbrella.com.au/wp-content/uploads/2017/06/program-monthly-w843h360-768x328.jpg" alt="jpeg" width="500">
+    <p>Here's a cool png image</p>
+    <img src="img/png.png" alt="png" width="200">
+    <p>Here's a cool webp image</p>
+    <img src="https://www.gstatic.com/webp/gallery/5.sm.webp" alt="jpeg" width="300">
+
+</body>
+</html>

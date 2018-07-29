@@ -1,0 +1,19 @@
+.log_in_block{
+    text-align: center;
+    padding: 2%;
+}
+main{
+    margin: 2% 8%;
+    padding: 3%;
+    border: 1px solid #ade0ff;
+    font-weight:300;
+}
+footer{
+    text-align: center;
+}
+
+img{
+    background: #2e3133;
+    width: 300px;
+    border-radius: 150px;
+}

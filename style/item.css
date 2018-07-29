@@ -1,0 +1,96 @@
+.text{
+    margin: 5px auto;
+    padding: 5px 1%;
+    font-size: 16px;
+    border: 1px solid lightgray;
+    width: 98%;
+    display: inline-block;
+}
+input{
+    font-size: 16px;
+    display: inline-block;
+}
+body form > fieldset{
+    margin: 0 2%;
+    min-width: 0;
+}
+fieldset fieldset{
+    margin: 1% 0;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 20px;
+}
+select{
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    margin: 5px;
+}
+div{
+    display: inline-block;
+    white-space: nowrap;
+}
+.option{
+    font-size: 14px;
+    padding: 10px;
+    margin-top: 10px;
+    display: inline-block;
+    border: 1px solid lightgray;
+    border-radius: 12px;
+    background: transparent;
+    color: black;
+}
+.more_attrs{
+    display: none;
+    white-space: nowrap;
+    padding: 5px 0;
+}
+.small_screen{
+    display: none;
+}
+@media (max-width: 420px) {
+    #f_date, #i_date{
+        display: flex;
+        white-space:normal;
+        font-size: 14px;
+    }
+    div{
+        display: inline;
+        white-space:normal;
+    }
+    .small_screen{
+        display:block;
+    }
+    .more_attrs{
+        text-align: center;
+    }
+
+}
+#day_of_month{
+    background: rgb(248, 248, 248);
+    border-radius: 5px;
+    width: 40px;
+}
+#f_date, #i_date{
+    background: rgb(248, 248, 248);
+    border-radius: 5px;
+    padding: 0 3%;
+    margin: 0 15px 0 0;
+    max-width:  150px;
+    width: 130px;
+}
+#save{
+    margin: 5px 2%;
+    margin-top: 20px;
+    width: 96%;
+}
+.months label{
+    display: inline-block;
+    padding: 2px;
+    margin: 2px;
+}
+
+.months:hover{
+    background: #b7e3ff;
+    border-radius: 12px;
+}

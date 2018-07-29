@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Monthly List</title>
+    <link rel="stylesheet" type="text/css" href="style/general.css"/>
+    <link rel="stylesheet" type="text/css" href="style/monthly.css"/>
+    <link rel="icon" href="img/logo.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <noscript>
+        <h1>Please enable javasrcipt for Monthly.</h1>
+    </noscript>
+    <header>
+        <ul class="navbar">
+            <li><a href="/item.html">Item</a></li>
+            <li><a href="/yearly.html">Yearly</a></li>
+            <li><a href="/archive.html">Archive</a></li>
+            <li id="log_out"><a href="/index.html">Log out</a></li>
+        </ul>
+    </header>
+    <h3 id="title"></h3>
+    <table>
+        <caption>Ordered by:
+            <select id="order_by">
+                <option value="date">Date</option>
+                <option value="priority">Priority</option>
+                <option value="name">Name</option>
+            </select>
+        </caption>
+        <colgroup>
+            <col id="col1" width="50%">
+            <col id="col2" width="10%">
+            <col id="col3" width="40%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th id="secondCol">Day</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody id='tbody'>
+            <!-- data populates here -->
+        </tbody>
+    </table>
+    <template id='opt_btns'>
+        <td>
+            <button type="button" id="check">
+                <img src="img/check.png" class="small_icon" alt="check">
+                <img src="img/check2.png" class="icon" alt="check">
+            </button>
+            <button type="button" id="archive">
+                <img src="img/archive.png" class="small_icon" alt="check">
+                <img src="img/archive2.png" class="icon" alt="check">
+            </button>
+            <button type="button" id="delete">
+                <img src="img/delete.png" class="small_icon" alt="check">
+                <img src="img/delete2.png" class="icon" alt="check">
+            </button>
+        </td>
+    </template>
+    <script type="text/javascript" src="js/monthly.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Item</title>
+    <link rel="stylesheet" type="text/css" href="style/general.css"/>
+    <link rel="stylesheet" type="text/css" href="style/item.css"/>
+    <link rel="icon" href="img/logo.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header>
+        <ul class="navbar">
+            <li><b><a href="/item.html">Item</a></b></li>
+            <li><a href="/yearly.html">Yearly</a></li>
+            <li><a href="/archive.html">Archive</a></li>
+            <li id="log_out"><a href="/index.html">Log out</a></li>
+        </ul>
+    </header>
+    <form class="" action="save()">
+        <fieldset>
+            <legend>Item Info:</legend>
+            <label for="name">Name: </label>
+            <br>
+            <input type="text" name="Name" class="text" id="name" value="">
+            <fieldset>
+                <legend>
+                    Which months to remind?
+                    <div class="months">
+                        <label for="All">
+                            <input type="checkbox" class='month' id='All' value="1">All
+                        </label>
+                    </div>
+                </legend>
+                <div class="months">
+                    <label for="Jan">
+                        <input type="checkbox" class='month' id='Jan' value="1">Jan
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Feb">
+                        <input type="checkbox" class='month' id='Feb' value="2">Feb
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Mar">
+                        <input type="checkbox" class='month' id='Mar' value="3">Mar
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Apr"><input type="checkbox" class='month' id='Apr' value="4">Apr
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="May"><input type="checkbox" class='month' id='May' value="5">May
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Jun"><input type="checkbox" class='month' id='Jun' value="6">Jun
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Jul"><input type="checkbox" class='month' id='Jul' value="7">Jul
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Aug"><input type="checkbox" class='month' id='Aug' value="8">Aug
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Sep"><input type="checkbox" class='month' id='Sep' value="9">Sep
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Oct"><input type="checkbox" class='month' id='Oct' value="10">Oct
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Nov"><input type="checkbox" class='month' id='Nov' value="11">Nov
+                    </label>
+                </div>
+                <div class="months">
+                    <label for="Dec"><input type="checkbox" class='month' id='Dec' value="12">Dec
+                    </label>
+                </div>
+                <span>
+                    <label for="mDay">&nbsp; Which day:&nbsp;</label>
+                    <input type="text" name="mDay" id="day_of_month" list="days" >
+                    <datalist id="days">
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                        <option value="6">6</option> <option value="7">7</option>
+                        <option value="8">8</option> <option value="9">9</option>  <option value="10">10</option> <option value="11">11</option> <option value="12">12</option>
+                        <option value="13">13</option> <option value="14">14</option> <option value="15">15</option> <option value="16">16</option> <option value="17">17</option>
+                        <option value="18">18</option> <option value="19">19</option> <option value="20">20</option> <option value="21">21</option> <option value="22">22</option>
+                        <option value="23">23</option> <option value="24">24</option> <option value="25">25</option> <option value="26">26</option> <option value="27">27</option>
+                        <option value="28">28</option> <option value="29">29</option> <option value="30">30</option> <option value="31">31</option>
+                    </datalist>
+                </nowrap>
+            </fieldset>
+            <!-- Month choices end -->
+            <label for="note">Notes: </label>
+            <br>
+            <textarea name="note" class="text" id="note" rows="4" cols="80"></textarea>
+            <br>
+            <div>
+                <label for="priority">&nbsp;Priority: </label>
+                <select id="priority">
+                    <option value="0"></option>
+                    <option value="1">Low</option>
+                    <option value="2">Medium</option>
+                    <option value="3">High</option>
+                </select>
+            </div>
+            <button type="button" id="more" class='option'>More</button>
+            <br class="small_screen">
+            <span class="more_attrs">
+                <label for="i_date">&nbsp;Begin: (<var id="time_pass">0</var> days total): </label>
+                <input type="date" name="f_date" id="i_date" class="text">
+            </span>
+            <span class="more_attrs">
+                <label for="f_date">End: (<var id="time_remain">0</var> days left): </label>
+                <input type="date" name="f_date" id="f_date" class="text">
+            </span>
+            <br class="small_screen">
+            <div class="options_div">
+                &nbsp;Options:
+                <br class="small_screen">
+                <button type="button" id='check' class="option">
+                    Check
+                    <img src="img/check.png" alt="check">
+                </button>
+                <button type="button" id='archive' class="option">
+                    Archive
+                    <img src="img/archive.png" alt="archive">
+                </button>
+                <button type="button" id='delete' class="option">
+                    Delete
+                    <img src="img/delete.png" alt="delete">
+                </button>
+            </div>
+            <br>
+            <button type="submit" id="save" name="button">Save</button>
+            <dialog id='popup'></dialog>
+
+        </fieldset>
+    </form>
+    <script type="text/javascript" src="js/item.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+.month{
+    /* border: 2px solid #ade0ff; */
+    padding: 10px;
+    margin: 0 10px;
+    box-shadow: 0 1px 2px steelblue;
+}
+.month:hover{
+    background: #dbf1ff;
+}
+#scroll_view{
+    overflow-y: scroll;
+}
+#no_dates{
+    box-shadow: 0 -2px 2px -2px  steelblue;
+    border-top: 2px solid #0687d8;
+    display: none;
+}
+div{
+    font-weight: 300;
+}
+h3{
+    padding-left: 40px;
+}
+li{
+    text-align: right;
+}
+ul{
+    list-style-type:circle;
+}
+hr{
+    border: 1px solid #0687d8;
+}
+#add_item_btn{
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+#add_item_info{
+    display: none;
+}

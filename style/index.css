@@ -1,0 +1,18 @@
+*{
+    text-align: center;
+}
+form{
+    font-size:2vh;
+    width: 100%;
+}
+label{
+    font-style: italic;
+}
+form input{
+    font-size: 18px;
+    padding: 5px 20px;
+    width: 30vw;
+    height: 3vh;
+    margin: 0 5px 5px 5px;
+    border: 1px solid lightgray;
+}
