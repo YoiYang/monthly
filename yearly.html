@@ -11,21 +11,16 @@
 <body>
     <header>
         <ul class="navbar">
-            <li><a href="/item.html">Item</a></li>
             <li><b><a href="/yearly.html">Yearly</a></b></li>
-            <li><a href="/archive.html">Archive</a></li>
+            <li><a href="/monthly.html?m=12&mon=Archived">Archive</a></li>
             <li id="log_out"><a href="/index.html">Log out</a></li>
         </ul>
     </header>
-    <button type="button" id="add_item_btn">+</button>
-    <div id="add_item_info">
-        <!-- todo:  item info box here -->
-    </div>
-    <div id="scroll_view">
-        <!-- data populates here -->
-    </div>
+    <button type="button" id="add_item_btn">Add</button>
+    <iframe src="/item.html" id="add_item_info"></iframe>
+    <div id="scroll_view"></div>
     <div id="no_dates">
-    <h3>No Dates</h3>
+        <h3>No Dates</h3>
         <div class="month">
             <ul id="no_dates_list">
                 <!-- data with no dates here -->

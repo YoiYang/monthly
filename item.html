@@ -9,18 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <header>
-        <ul class="navbar">
-            <li><b><a href="/item.html">Item</a></b></li>
-            <li><a href="/yearly.html">Yearly</a></li>
-            <li><a href="/archive.html">Archive</a></li>
-            <li id="log_out"><a href="/index.html">Log out</a></li>
-        </ul>
-    </header>
-    <form class="" action="save()">
+    <form class="">
         <fieldset>
             <legend>Item Info:</legend>
-            <label for="name">Name: </label>
+            <label for="name">Name: <span id="required">* required</span></label>
             <br>
             <input type="text" name="Name" class="text" id="name" value="">
             <fieldset>
@@ -83,8 +75,8 @@
                     <label for="Dec"><input type="checkbox" class='month' id='Dec' value="12">Dec
                     </label>
                 </div>
-                <span>
-                    <label for="mDay">&nbsp; Which day:&nbsp;</label>
+                <span><br><br>
+                    <label for="mDay">&nbsp; <u>On day: </u><i>No.</i></label>
                     <input type="text" name="mDay" id="day_of_month" list="days" >
                     <datalist id="days">
                         <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
@@ -100,31 +92,39 @@
             <!-- Month choices end -->
             <label for="note">Notes: </label>
             <br>
-            <textarea name="note" class="text" id="note" rows="4" cols="80"></textarea>
+            <textarea name="note" class="text" id="note" rows="3" cols="80"></textarea>
             <br>
-            <div>
+            <button type="button" id="more" class="option">More<img src="img/more.png" alt="more" id='moreImg'></button>
+            <span class="more_attrs">
                 <label for="priority">&nbsp;Priority: </label>
                 <select id="priority">
-                    <option value="0"></option>
-                    <option value="1">Low</option>
-                    <option value="2">Medium</option>
-                    <option value="3">High</option>
+                    <option value="3"></option>
+                    <option value="2">Low</option>
+                    <option value="1">Medium</option>
+                    <option value="0">High</option>
                 </select>
-            </div>
-            <button type="button" id="more" class='option'>More</button>
+            </span>
             <br class="small_screen">
             <span class="more_attrs">
-                <label for="i_date">&nbsp;Begin: (<var id="time_pass">0</var> days total): </label>
+                <label for="i_date">&nbsp;Begin: <small>(<var id="time_pass">0</var> days so far)</small> </label>
                 <input type="date" name="f_date" id="i_date" class="text">
             </span>
             <span class="more_attrs">
-                <label for="f_date">End: (<var id="time_remain">0</var> days left): </label>
+                <label for="f_date"><span class="small_screen">&nbsp;</span>End: <small>(<var id="time_remain">0</var> days left)</small> </label>
                 <input type="date" name="f_date" id="f_date" class="text">
             </span>
+            <div id="confirmDel" class="confirmDel" style="display: 'none'">
+                <form method="dialog">
+                    <section>
+                        <p>This item will be deleted forever</p>
+                        <button id="cancel" type="button">Cancel</button>
+                        <button type="button" id="del-confirm">Confirm</button>
+                    </section>
+                </form>
+            </div>
             <br class="small_screen">
-            <div class="options_div">
+            <span class="options_div">
                 &nbsp;Options:
-                <br class="small_screen">
                 <button type="button" id='check' class="option">
                     Check
                     <img src="img/check.png" alt="check">
@@ -137,11 +137,9 @@
                     Delete
                     <img src="img/delete.png" alt="delete">
                 </button>
-            </div>
+            </span>
             <br>
-            <button type="submit" id="save" name="button">Save</button>
-            <dialog id='popup'></dialog>
-
+            <button type="button" id="save" name="button">Save</button>
         </fieldset>
     </form>
     <script type="text/javascript" src="js/item.js"></script>

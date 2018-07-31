@@ -11,8 +11,9 @@ input{
     display: inline-block;
 }
 body form > fieldset{
-    margin: 0 2%;
     min-width: 0;
+    background: white;
+    box-shadow: 2px 2px 4px lightgray;
 }
 fieldset fieldset{
     margin: 1% 0;
@@ -39,6 +40,7 @@ div{
     border-radius: 12px;
     background: transparent;
     color: black;
+    text-align: center;
 }
 .more_attrs{
     display: none;
@@ -46,6 +48,36 @@ div{
     padding: 5px 0;
 }
 .small_screen{
+    display: inline-block;
+}
+#day_of_month{
+    background: rgb(248, 248, 248);
+    border-radius: 5px;
+    width: 40px;
+}
+#f_date, #i_date{
+    background: rgb(248, 248, 248);
+    border-radius: 5px;
+    padding: 0 3%;
+    margin: 0 15px 0 0;
+    max-width:  150px;
+    width: 150px;
+}
+#save{
+    margin: 5px 2%;
+    margin-top: 20px;
+    width: 96%;
+}
+.months{
+    display: inline-block;
+    padding: 6px;
+
+}
+.months:hover{
+    background: #b7e3ff;
+    border-radius: 12px;
+}
+#moreImg{
     display: none;
 }
 @media (max-width: 420px) {
@@ -59,38 +91,27 @@ div{
         white-space:normal;
     }
     .small_screen{
-        display:block;
+        display:none;
     }
     .more_attrs{
         text-align: center;
     }
-
+    #note{
+        height: 2em;
+    }
+    .option{
+        font-size: 0px;
+        padding: 2px;
+        margin-top: 2px;
+    }
+    .options_div{
+        font-size: 0px;
+    }
+    #moreImg{
+        display: inline-block;
+    }
 }
-#day_of_month{
-    background: rgb(248, 248, 248);
-    border-radius: 5px;
-    width: 40px;
-}
-#f_date, #i_date{
-    background: rgb(248, 248, 248);
-    border-radius: 5px;
-    padding: 0 3%;
-    margin: 0 15px 0 0;
-    max-width:  150px;
-    width: 130px;
-}
-#save{
-    margin: 5px 2%;
-    margin-top: 20px;
-    width: 96%;
-}
-.months label{
-    display: inline-block;
-    padding: 2px;
-    margin: 2px;
-}
-
-.months:hover{
-    background: #b7e3ff;
-    border-radius: 12px;
+#required{
+    color: red;
+    display: none;
 }

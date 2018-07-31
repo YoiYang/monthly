@@ -1,3 +1,14 @@
+// setup elements
+var inp_name = document.getElementById('name');
+var inp_note = document.getElementById('note');
+var inp_day = document.getElementById('day_of_month');
+var inp_i_date = document.getElementById('i_date');
+var inp_f_date = document.getElementById('f_date');
+var inp_prio = document.getElementById('priority');
+var month_checkboxes = document.getElementsByClassName('month');
+var check_btn = document.getElementById('check');
+var archive_btn = document.getElementById('archive');
+
 // "more" options
 var moreBtn = document.getElementById('more');
 var more_blocks = document.getElementsByClassName('more_attrs');
@@ -12,67 +23,178 @@ moreBtn.addEventListener('click',function(){
         }
 });
 
-onclick="document.getElementById('options_div').display = 'inline-block';"
-// TODO:: Archive/Delete ui
-setpopup('delete');
-setpopup('archive');
-setpopup('check');
-function setpopup(idname){
-    document.getElementById(idname).addEventListener('click',
-        function(){
-            let a = document.getElementById('popup');
-            a.innerHTML = idname + "!";
-            a.style.display = "block";
-            setTimeout(
-                function(){
-                    document.getElementById('popup').style.display = "none";
-                }, 1000);
-        });
-}
-// month checkboxes
-// check all months
-var month_checkboxes = document.getElementsByClassName('month');
-// set up each month
+// month checkboxes UI setup
 for (var i = 1; i < month_checkboxes.length; i++){
     month_checkboxes[i].addEventListener('input',function(){
-        if (!this.checked){
-            // when a month is unchecked, uncheck All option
+        if (!this.checked)
             month_checkboxes[0].checked = false;
-        }
     })
 }
-
 month_checkboxes[0].addEventListener('input', function(){
-    for (var i = 1; i < month_checkboxes.length; i++){
+    for (var i = 1; i < month_checkboxes.length; i++)
         month_checkboxes[i].checked = this.checked;
-    }
 });
 
-
-// Days remain/passed
+// Days remain/passed auto-calculation
 var remain = document.getElementById('time_remain');
 var pass = document.getElementById('time_pass');
-var f_date = document.getElementById('f_date');
-var i_date = document.getElementById('i_date');
-f_date.addEventListener('input', calculateDays);
-i_date.addEventListener('input', calculateDays);
+inp_f_date.addEventListener('input', calculateDays);
+inp_i_date.addEventListener('input', calculateDays);
 function calculateDays (evt) {
-    if (f_date.value != "")
-        remain.innerHTML=Math.floor((new Date(f_date.value)-new Date())/(1000*60*60*24));
-    if (i_date.value != "")
-        pass.innerHTML=Math.floor((new Date()-new Date(i_date.value))/(1000*60*60*24));
+    if (inp_f_date.value != "")
+        remain.innerHTML=1+Math.floor((new Date(inp_f_date.value)-new Date())/(1000*60*60*24));
+    if (inp_i_date.value != "")
+        pass.innerHTML=Math.floor((new Date()-new Date(inp_i_date.value))/(1000*60*60*24))-1;
 }
 
-
-//get from dirty url
-if (document.URL.includes('?')){
-    var d = (decodeURI(document.URL).split('?')[1]).split('&');
-    document.getElementById('name').value = d[0].substring(5);
-    document.getElementById('f_date').value = d[1].substring(5);
-    document.getElementById('priority').value = d[2].substring(5);
+// fetch data
+var d_list = JSON.parse(localStorage.dataList);
+let url = new URL(document.URL);
+if (url.searchParams.get("more") != null){
+    for (let i = 0; i < more_blocks.length; i++){
+        more_blocks[i].style.display = 'inline-block';
+    }
+}
+var item_ind;
+if (url.searchParams.get("ind") != null && url.searchParams.get("ind") < d_list.length){
+    // modifying an old item
+    item_ind = parseInt(url.searchParams.get("ind"));
+    inp_name.value = d_list[item_ind]['Name'];
+    if (d_list[item_ind]['Mon'] != null){
+        let months = d_list[item_ind]['Mon'].split(',');
+        for (var i = 0; i < months.length; i++){
+            if (months[i] != "")
+                month_checkboxes[parseInt(months[i])].checked = true;
+        }
+        if (months.length == 12)
+            month_checkboxes[0].checked = true;
+    }
+    if (d_list[item_ind]['Day'] != null)
+        inp_day.value = parseInt(d_list[item_ind]['Day']);
+    inp_note.value = d_list[item_ind]['Note'];
+    inp_i_date.value = d_list[item_ind]['Begin'];
+    inp_f_date.value = d_list[item_ind]['End'];
+    inp_prio.value = d_list[item_ind]['Prio'];
     calculateDays();
+    if(!d_list[item_ind]["Inprog"]){
+        check_btn.style.background = '#b7e3ff';
+    }
+    if(d_list[item_ind]["Archive"]){
+        archive_btn.style.background = '#b7e3ff';
+        archive_btn.childNodes[0].nodeValue = 'Unarchive\n';
+    }
+}
+else{
+    item_ind = d_list.length;
+}
+// set up Save/Archive/Delete/Check
+function storeInfo(){
+    // if adding a new item
+    if (item_ind == d_list.length){
+        console.log("Creating new element");
+        d_list[item_ind]= {
+            Name: "",
+            Mon: "",
+            Day: "",
+            Note: "",
+            Begin: new Date().toJSON().slice(0,10),
+            End: "",
+            Prio: 3,
+            Archive: false,
+            Inprog: true,
+            PreInprog: false,
+            color: ""
+        };
+    }
+    d_list[item_ind]['Name'] = inp_name.value;
+    d_list[item_ind]['Mon'] = "";
+    if (month_checkboxes[0].checked == true)
+        d_list[item_ind]['Mon'] = "1,2,3,4,5,6,7,8,9,10,11,12";
+    else{
+        for (var i = 1; i < 13; i++){
+            if (month_checkboxes[i].checked){
+                if (d_list[item_ind]['Mon'].length == 0)
+                    d_list[item_ind]['Mon'] += i;
+                else
+                    d_list[item_ind]['Mon'] += (',' + i);
+            }
+        }
+    }
+    if (inp_day.value.length > 0)
+        d_list[item_ind]['Day'] = inp_day.value;
+    d_list[item_ind]['Note'] = inp_note.value;
+    d_list[item_ind]['Begin'] = inp_i_date.value;
+    d_list[item_ind]['End'] = inp_f_date.value;
+    d_list[item_ind]['Prio'] = inp_prio.value;
 }
 
-function save(x){
-    alert(x)
+// a function that removes this item from the monthly list (in sessionStorage)
+var from_mon_ind = url.searchParams.get("frommon");
+function removeFromTheMonth(){
+    let index_list = JSON.parse(sessionStorage.index_list);
+    if (index_list[from_mon_ind-1] != null){
+        let alloc_ind = index_list[from_mon_ind-1].indexOf(item_ind);
+        if (alloc_ind > -1){
+            index_list[from_mon_ind-1].splice(alloc_ind,1);
+            sessionStorage.index_list = JSON.stringify(index_list);
+        }
+    }
 }
+// set up Save
+var save_btn = document.getElementById('save');
+var require = document.getElementById('required');
+function save_function(){
+    storeInfo();
+    localStorage.dataList = JSON.stringify(d_list);
+    // if user changes the assigned month
+    if (from_mon_ind != null && month_checkboxes[from_mon_ind].checked == false)
+        removeFromTheMonth();
+    else if (from_mon_ind == -1){
+        for (var i = 1; i <= 12; i++)
+            if (month_checkboxes[i].checked){
+                removeFromTheMonth();
+                break;
+            }
+    }
+    window.close();
+}
+// set up save_btn
+save_btn.addEventListener('mouseover',function(){
+    if (inp_name.value.trim() == ""){
+        save_btn.removeEventListener('click',save_function,false);
+        require.style.display = 'inline-block';
+    }
+    else {
+        save_btn.addEventListener('click',save_function,false);
+    }
+});
+// set up Archive
+archive_btn.addEventListener('click',function(){
+    storeInfo();
+    d_list[item_ind]["Archive"] = !d_list[item_ind]["Archive"];
+    localStorage.dataList = JSON.stringify(d_list);
+    removeFromTheMonth();
+});
+// set up Delete
+var popup =  document.getElementById('confirmDel');
+document.getElementById('delete').addEventListener('click',function(){
+    popup.style.display = 'inline-block';
+});
+document.getElementById('cancel').addEventListener('click',function(){
+    popup.style.display = 'none';
+});
+document.getElementById('del-confirm').addEventListener('click',function(){
+    if (item_ind != d_list){
+        // if deleting an existing item
+        d_list[item_ind] = null;
+        localStorage.dataList = JSON.stringify(d_list);
+        removeFromTheMonth();
+    }
+});
+// set up Check
+check_btn.addEventListener('click',function(){
+    storeInfo();
+    d_list[item_ind]["Inprog"] = !d_list[item_ind]["Inprog"];
+    localStorage.dataList = JSON.stringify(d_list);
+    window.history.back();
+});

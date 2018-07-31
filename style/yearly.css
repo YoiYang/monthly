@@ -1,25 +1,50 @@
 .month{
     /* border: 2px solid #ade0ff; */
     padding: 10px;
-    margin: 0 10px;
+    margin: 0 10%;
     box-shadow: 0 1px 2px steelblue;
+    background: white;
 }
+
+li{
+    text-overflow: ellipsis;
+
+}
+@media (max-width: 420px) {
+    .month{
+        padding: 5px;
+        margin: 0 5%;
+        box-shadow: 0 1px 2px steelblue;
+        font-size: 14px;
+    }
+}
+
 .month:hover{
     background: #dbf1ff;
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+    transition: 0.1s linear;
+}
+progress{
+    width: 12%;
 }
 #scroll_view{
+    /* border-top: 2px solid #0687d8; */
+    border-bottom: 2px solid #0687d8;
     overflow-y: scroll;
+    background: #f9fdff;
+    box-shadow: inset 0 2px 10px -1px;
 }
 #no_dates{
-    box-shadow: 0 -2px 2px -2px  steelblue;
-    border-top: 2px solid #0687d8;
+    height: 10%;
     display: none;
 }
 div{
     font-weight: 300;
 }
 h3{
-    padding-left: 40px;
+    padding-left: 10%;
 }
 li{
     text-align: right;
@@ -27,14 +52,10 @@ li{
 ul{
     list-style-type:circle;
 }
-hr{
-    border: 1px solid #0687d8;
-}
 #add_item_btn{
     display: block;
     margin: auto;
     text-align: center;
-}
-#add_item_info{
-    display: none;
+    box-shadow: 0 2px 2px lightgray;
+    width: 50%;
 }

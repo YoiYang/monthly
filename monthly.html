@@ -14,20 +14,34 @@
     </noscript>
     <header>
         <ul class="navbar">
-            <li><a href="/item.html">Item</a></li>
             <li><a href="/yearly.html">Yearly</a></li>
-            <li><a href="/archive.html">Archive</a></li>
             <li id="log_out"><a href="/index.html">Log out</a></li>
         </ul>
     </header>
+    <button type="button" name="button" id="cancel">Cancel</button>
+    <iframe src="/item.html" id="edit_item_info"></iframe>
     <h3 id="title"></h3>
-    <table>
+    <table id='table'>
         <caption>Ordered by:
             <select id="order_by">
-                <option value="date">Date</option>
-                <option value="priority">Priority</option>
-                <option value="name">Name</option>
+                <option value="Day">Day</option>
+                <option value="Prio">Priority</option>
+                <option value="Name">Name</option>
+                <option value="Inprog">Completion</option>
             </select>
+            <div id="confirmDel" class="confirmDel">
+                <form method="dialog">
+                    <section>
+                        <p>This item will be deleted forever.</p>
+                        <var id="delInd"></var>
+                        <button id="cancelDel" type="button">Cancel</button>
+                        <button type="button" id="del-confirm">Confirm</button>
+                    </section>
+                </form>
+            </div>
+            <div id="confirmAction" class="confirmDel">
+                <p>Archived!</p>
+            </div>
         </caption>
         <colgroup>
             <col id="col1" width="50%">
@@ -47,15 +61,15 @@
     </table>
     <template id='opt_btns'>
         <td>
-            <button type="button" id="check">
+            <button type="button" class="check">
                 <img src="img/check.png" class="small_icon" alt="check">
                 <img src="img/check2.png" class="icon" alt="check">
             </button>
-            <button type="button" id="archive">
-                <img src="img/archive.png" class="small_icon" alt="check">
-                <img src="img/archive2.png" class="icon" alt="check">
+            <button type="button" class="archive">
+                <img src="img/archive.png" id="archiveImg" class="small_icon" alt="check">
+                <img src="img/archive2.png" id="archive2Img" class="icon" alt="check">
             </button>
-            <button type="button" id="delete">
+            <button type="button" class="delete">
                 <img src="img/delete.png" class="small_icon" alt="check">
                 <img src="img/delete2.png" class="icon" alt="check">
             </button>

@@ -2,12 +2,15 @@ table {
     border-collapse: collapse;
     width: 100%;
     box-shadow: 0 1px 2px steelblue;
+    /* padding: 1%; */
+    table-layout: fixed;
 }
 table caption{
     padding: 10px;
 }
-h3{
+body{
     text-align: center;
+    margin: 10px;
 }
 th{
     background: #0687d8;
@@ -25,13 +28,9 @@ td{
     overflow: hidden;
     transition: 0.1s linear;
 }
-table{
-    table-layout: fixed;
-}
 table, td {
     border-bottom: 1px solid #ddd;
     text-indent: 10px;
-    text-align: center;
     font-weight: lighter;
     font-size: 16px;
 }
@@ -45,4 +44,13 @@ td button{
     table, td{
         font-size: 18px;
     }
+}
+#cancel{
+    opacity: 0;
+    position: fixed;
+    border-radius: 35px;
+    left: 50
+    width: 20%;
+    transform: translateX(-50%);
+    z-index:13;
 }

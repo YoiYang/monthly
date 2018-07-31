@@ -3,7 +3,7 @@
 // import some sample data (if there's localStorage)
 var cur_mon = 7;
 if (localStorage.length == 0){
-    let dat = ['{"Name":"Learn how to play Tennis", "Mon":"1,3,5,7,8","Day":31, "Note":"I gladly wrote notes here","More":true,"End":"2018-07-31","Prio":false,"Archive":false,"Begin":"2018-07-04","Done":false}','{"Name":"Read 3 books this month","Day":30,"Note":"some other notes", "More":true,"End":"2018-08-04","Prio":3, "Archive":false,"0":false,"Begin":"2018-07-04","Predone":false}',' {"Name":"Pretend to be like a student", "Mon":"1,5,6","Note":"I gladly  here", "More":false,"Archive":false,"Begin":"2018-07-04", "End":"2018-10-04","Done":true}','{"Name":"Something else", "Mon":"5","Note":"I notes here", "More":true,"End":"2018-07-31", "Prio":2,"Archive":false,"Begin":"2018-07-04", "Done":true,"Predone":false}','{"Name":"Sleep enough everyday", "Mon":"5,8","Day":13,"Note":"I am here","More": true, "End":"2018-07-05",  "Prio":true,"Archive":true, "Color":"r", "Begin":"2018-07-04", "Done":false,"Predone":true}',' {"Name":"Learn AI programming ", "Mon":"5,9,11", "Day":3,"Note":"I gladly","More":false,"End":"2018-07-04", "Prio":false, "Archive":true,"Color":"g","Begin":"2018-07-04","Begin":"2019-07-04", "Done":false, "Predone":true}'];
+    let dat = ['{"Name":"Learn how to play Tennis", "Mon":"1,3,5,7,8","Day":31, "Note":"I gladly wrote notes here","More":true,"End":"2018-07-31","Prio":"0","Archive":false,"Begin":"2018-07-04","Inprog":false}','{"Name":"Read 3 books this month","Day":30,"Note":"some other notes", "More":true,"End":"2018-08-04","Prio":"3", "Archive":false,"0":false,"Begin":"2018-07-04","PreInprog":false}',' {"Name":"Pretend to be like a student", "Mon":"1,5,6","Note":"I gladly  here", "More":false,"Archive":false,"Begin":"2018-07-04", "End":"2018-10-04","Inprog":true}','{"Name":"Something else", "Mon":"5","Note":"I notes here", "More":true,"End":"2018-07-31", "Prio":"2","Archive":false,"Begin":"2018-07-04", "Inprog":true,"PreInprog":false}','{"Name":"Sleep enough everyday", "Mon":"5,8","Day":13,"Note":"I am here","More": true, "End":"2018-07-05",  "Prio":"1","Archive":true, "Color":"r", "Begin":"2018-07-04", "Inprog":false,"PreInprog":true}',' {"Name":"Learn AI programming ", "Mon":"5,9,11", "Day":3,"Note":"I gladly","More":false,"End":"2018-07-04", "Prio":"0", "Archive":true,"Color":"g","Begin":"2018-07-04","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}'];
     var list = [];
     for (var i = 0; i<dat.length;i++){
         list.push(JSON.parse(dat[i]));
@@ -19,10 +19,15 @@ function addToNoDates(i){
         index_list[13].push(i);
     }
 }
+
+// reorganize modified datalist (Some are null)
+var d_list = JSON.parse(localStorage.dataList);
+d_list = d_list.filter(item => item!=null);
+localStorage.dataList = JSON.stringify(d_list);
+
 // populate data into a list
 // 0~11: each month, 12: archived, 13: no dates,
 // 14: undone in current month, 15:undone in last month
-var d_list = JSON.parse(localStorage.dataList);
 var index_list = [];
 for (var i = 0; i < d_list.length; i++){
     if (d_list[i]['Archive'] == true){
@@ -68,12 +73,12 @@ for (var i = 0; i < d_list.length; i++){
     }
 }
 
-// reset "Done" attribute if a new month has come
+// reset "Inprog" attribute if a new month has come
 var now = new Date();
 if (now.getMonth() + 1 > cur_mon){
     for(var i = 0; i < index_list[15].length; i++){
-        d_list[index_list[15][i]]["Predone"] = d_list[index_list[15][i]]["Done"];
-        d_list[index_list[15][i]]["Done"] = false;
+        d_list[index_list[15][i]]["PreInprog"] = d_list[index_list[15][i]]["Inprog"];
+        d_list[index_list[15][i]]["Inprog"] = true;
     }
     index_list[15] = index_list[14];
     index_list[14] = [];
@@ -119,7 +124,7 @@ for (var i = 0; i < 12; i++){
     // add ... to indicate more than 4
     if (index_list[mon_index].length > 4){
         let liTag = document.createElement('li');
-        liTag.appendChild(document.createTextNode("..."));
+        liTag.appendChild(document.createTextNode(". . ."));
         ulTag.appendChild(liTag);
     }
     newMonthDiv.appendChild(ulTag);
@@ -132,33 +137,74 @@ for (var i = 0; i < 12; i++){
 }
 
 // if needed to display "no_dates"
+var no_dates = document.getElementById("no_dates");
 if (index_list[13] != null && index_list[13].length != 0){
-    var no_dates = document.getElementById("no_dates");
     no_dates.style.display = 'block';
-
     // populate no_date data in No_date
     let ulTag = document.getElementById('no_dates_list');
     for (var j = 0; j < 4 && j < index_list[13].length; j++){
         // item name
-        console.log(j);
         let liTag = document.createElement('li');
         let id = index_list[13][j];
         content = document.createTextNode(d_list[id]["Name"]+" ");
         liTag.appendChild(content);
         ulTag.appendChild(liTag);
     }
-    scroll_view.style.height = '65vh';
+    no_dates.addEventListener('click',function(){
+        window.location.href = '/monthly.html?m=13&mon=No%20Dates&frommon=-1'
+    });
+    scroll_view.style.height = '70vh';
 }
 
-// put important info in session storage
+// put indexed info in session storage
 sessionStorage.index_list = JSON.stringify(index_list);
 
-// add item?
-// var add = document.getElementById('add_item_btn');
-// var addBox = document.getElementById('add_item_info');
-// add.addEventListener('click',function(){
-//     if (window.getComputedStyle(addBox).display == 'none')
-//         addBox.style.display = 'block';
-//     else
-//         addBox.style.display = 'none';
-// });
+// add item set up
+var add = document.getElementById('add_item_btn');
+// set add item iframe
+var addBox = document.getElementById('add_item_info');
+function hideAddBox(){
+    addBox.style.visibility = 'none';
+    addBox.style.opacity = 0;
+    addBox.style.width = 0;
+    add.innerHTML = "Add";
+}
+add.addEventListener('click',function(){
+    if (addBox.style.opacity == 0){
+        addBox.style.opacity = 1
+        addBox.style.width = '419px';
+        if (document.documentElement.clientWidth < 420){
+            addBox.style.width = '100%';
+        }
+        addBox.src = '/item.html?ind='+d_list.length;
+        addBox.style.visibility = 'visible';
+        addBox.style.height = addBox.contentWindow.document.body.scrollHeight + 'px';
+        add.innerHTML = "Cancel";
+    }
+    else
+        hideAddBox();
+});
+// cancel add items
+document.onkeyup = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27)
+        hideAddBox();
+};
+scroll_view.addEventListener('click',function(){
+    if (addBox.style.opacity == 1)
+        hideAddBox();
+});
+// let "delete" hide the edit box
+addBox.addEventListener('load',function(){
+    addBox.contentDocument.getElementById('delete').addEventListener('click',function(){
+        hideAddBox();
+    });
+    addBox.contentDocument.getElementById('archive').addEventListener('click',function(){
+        hideAddBox();
+        location.reload();
+    });
+    addBox.contentDocument.getElementById('save').addEventListener('click',function(){
+        hideAddBox();
+        location.reload();
+    });
+});

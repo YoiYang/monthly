@@ -2,8 +2,8 @@
     text-align: center;
 }
 form{
-    font-size:2vh;
-    width: 100%;
+    width: 80%;
+    padding: 0 10%;
 }
 label{
     font-style: italic;
@@ -11,8 +11,12 @@ label{
 form input{
     font-size: 18px;
     padding: 5px 20px;
-    width: 30vw;
+    width: 60vmin;
     height: 3vh;
     margin: 0 5px 5px 5px;
     border: 1px solid lightgray;
+}
+button{
+    width: 50vw;
+    max-width: 300px
 }
