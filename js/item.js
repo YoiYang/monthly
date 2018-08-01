@@ -85,6 +85,7 @@ if (url.searchParams.get("ind") != null && url.searchParams.get("ind") < d_list.
     }
 }
 else{
+    // adding a new item
     item_ind = d_list.length;
 }
 // set up Save/Archive/Delete/Check
@@ -93,6 +94,7 @@ function storeInfo(){
     if (item_ind == d_list.length){
         console.log("Creating new element");
         d_list[item_ind]= {
+            id: Math.random().toString(36).slice(2, 12),
             Name: "",
             Mon: "",
             Day: "",
@@ -132,7 +134,7 @@ function storeInfo(){
 var from_mon_ind = url.searchParams.get("frommon");
 function removeFromTheMonth(){
     let index_list = JSON.parse(sessionStorage.index_list);
-    if (index_list[from_mon_ind-1] != null){
+    if (from_mon_ind != null && index_list[from_mon_ind-1] != null){
         let alloc_ind = index_list[from_mon_ind-1].indexOf(item_ind);
         if (alloc_ind > -1){
             index_list[from_mon_ind-1].splice(alloc_ind,1);
@@ -140,23 +142,44 @@ function removeFromTheMonth(){
         }
     }
 }
+function updateDatabase(ind,method){
+    // if using online mode
+    if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
+        let xhr = new XMLHttpRequest();
+        // allow async
+        if (method == "POST")
+            xhr.open(method, localStorage.server_url, true);
+        else
+            xhr.open(method, localStorage.server_url + "/" + d_list[ind]["id"], true);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        if (method == "DELETE")
+            xhr.send();
+        else
+            xhr.send(JSON.stringify(d_list[ind]));
+    }
+}
 // set up Save
 var save_btn = document.getElementById('save');
 var require = document.getElementById('required');
 function save_function(){
     storeInfo();
-    localStorage.dataList = JSON.stringify(d_list);
-    // if user changes the assigned month
-    if (from_mon_ind != null && month_checkboxes[from_mon_ind].checked == false)
-        removeFromTheMonth();
-    else if (from_mon_ind == -1){
-        for (var i = 1; i <= 12; i++)
-            if (month_checkboxes[i].checked){
-                removeFromTheMonth();
-                break;
-            }
+    // if adding a new item
+    if (item_ind == d_list.length - 1){
+        updateDatabase(item_ind,"POST");
+    }else{
+        // if editing an exsiting  item
+        updateDatabase(item_ind,"PUT");
     }
-    window.close();
+    localStorage.dataList = JSON.stringify(d_list);
+
+    // no need to update the session after change month.
+    if (from_mon_ind == 13) return;
+    // if this is from no_dates or month 1~12
+    // when user makes changes in the month, update the temp list in monthly.html
+    if (from_mon_ind == 14 ||
+        (month_checkboxes[from_mon_ind] != null && month_checkboxes[from_mon_ind].checked == false))
+        removeFromTheMonth();
+
 }
 // set up save_btn
 save_btn.addEventListener('mouseover',function(){
@@ -172,29 +195,33 @@ save_btn.addEventListener('mouseover',function(){
 archive_btn.addEventListener('click',function(){
     storeInfo();
     d_list[item_ind]["Archive"] = !d_list[item_ind]["Archive"];
+    updateDatabase(item_ind,"PUT");
     localStorage.dataList = JSON.stringify(d_list);
     removeFromTheMonth();
 });
 // set up Delete
-var popup =  document.getElementById('confirmDel');
+// var popup =  document.getElementById('confirmDel');
 document.getElementById('delete').addEventListener('click',function(){
-    popup.style.display = 'inline-block';
-});
-document.getElementById('cancel').addEventListener('click',function(){
-    popup.style.display = 'none';
-});
-document.getElementById('del-confirm').addEventListener('click',function(){
-    if (item_ind != d_list){
-        // if deleting an existing item
-        d_list[item_ind] = null;
-        localStorage.dataList = JSON.stringify(d_list);
-        removeFromTheMonth();
+    if (window.confirm("This item will be deleted forever.")){
+        if (item_ind < d_list.length){
+            // if deleting an existing item
+            updateDatabase(item_ind,"DELETE");
+            d_list[item_ind] = null;
+            localStorage.dataList = JSON.stringify(d_list);
+            removeFromTheMonth();
+        }
     }
 });
 // set up Check
 check_btn.addEventListener('click',function(){
     storeInfo();
     d_list[item_ind]["Inprog"] = !d_list[item_ind]["Inprog"];
+    updateDatabase(item_ind,"PUT");
     localStorage.dataList = JSON.stringify(d_list);
-    window.history.back();
+    if(!d_list[item_ind]["Inprog"]){
+        check_btn.style.background = '#b7e3ff';
+    }
+    else {
+        check_btn.style.background = 'transparent';
+    }
 });

@@ -54,3 +54,15 @@ td button{
     transform: translateX(-50%);
     z-index:13;
 }
+.messageBox{
+    position: fixed;
+    display: none;
+    background: white;
+    padding: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    text-align: center;
+    border: 1px solid gray;
+    z-index:13;
+}

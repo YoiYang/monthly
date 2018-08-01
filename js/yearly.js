@@ -1,16 +1,55 @@
 // TODO:: update cur_mon everytime log in
 
-// import some sample data (if there's localStorage)
-var cur_mon = 7;
-if (localStorage.length == 0){
-    let dat = ['{"Name":"Learn how to play Tennis", "Mon":"1,3,5,7,8","Day":31, "Note":"I gladly wrote notes here","More":true,"End":"2018-07-31","Prio":"0","Archive":false,"Begin":"2018-07-04","Inprog":false}','{"Name":"Read 3 books this month","Day":30,"Note":"some other notes", "More":true,"End":"2018-08-04","Prio":"3", "Archive":false,"0":false,"Begin":"2018-07-04","PreInprog":false}',' {"Name":"Pretend to be like a student", "Mon":"1,5,6","Note":"I gladly  here", "More":false,"Archive":false,"Begin":"2018-07-04", "End":"2018-10-04","Inprog":true}','{"Name":"Something else", "Mon":"5","Note":"I notes here", "More":true,"End":"2018-07-31", "Prio":"2","Archive":false,"Begin":"2018-07-04", "Inprog":true,"PreInprog":false}','{"Name":"Sleep enough everyday", "Mon":"5,8","Day":13,"Note":"I am here","More": true, "End":"2018-07-05",  "Prio":"1","Archive":true, "Color":"r", "Begin":"2018-07-04", "Inprog":false,"PreInprog":true}',' {"Name":"Learn AI programming ", "Mon":"5,9,11", "Day":3,"Note":"I gladly","More":false,"End":"2018-07-04", "Prio":"0", "Archive":true,"Color":"g","Begin":"2018-07-04","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}'];
-    var list = [];
-    for (var i = 0; i<dat.length;i++){
-        list.push(JSON.parse(dat[i]));
-    }
-    localStorage.dataList = JSON.stringify(list);
+// import some sample data for user local use
+if (localStorage.dataList == null && (localStorage.offline == null || JSON.parse(localStorage.offline)!=false)){
+    console.log("Using local data");
+    let dat = [
+        {"Name":"Learn how to play Tennis", "Mon":"1,3,5,7,8","Day":31, "Note":"I gladly wrote notes here","More":true,"End":"2018-07-31","Prio":"2","Archive":false,"Begin":"2018-07-04","Inprog":true}
+        ,{"Name":"Read a book this month","Day":30,"Note":"some other notes", "More":true,"End":"2018-08-04","Prio":"3", "Archive":false,"Begin":"2018-07-04","PreInprog":false}
+        ,{"Name":"Appreciate your achivements", "Mon":"1,5,6,8","Day":15,"Note":"I should take notes here", "More":false,"Archive":false,"Begin":"2018-07-04", "End":"2018-10-04","Inprog":true}
+        ,{"Name":"Contact someone I didn\'t contact for years", "Mon":"5","Note":"I note here", "More":true,"End":"2018-07-31", "Prio":"2","Archive":false,"Begin":"2018-07-04", "Inprog":true,"PreInprog":false}
+        ,{"Name":"Sleep enough at least two times a week", "Mon":"5,8","Day":13,"Note":"It\'s true","More": true, "End":"2018-07-05",  "Prio":"1","Archive":true, "Color":"r", "Begin":"2018-07-04", "Inprog":false,"PreInprog":true}
+        , {"Name":"Study AI programming ", "Mon":"5,8,9,11", "Day":3,"Note":"Machine Learning man! Oh Yeah! ???","More":false,"End":"2018-07-04", "Prio":"0", "Archive":true,"Color":"g","Begin":"2018-07-04","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}
+        , {"Name":"Study anthropology", "Mon":"1,2,3,10", "Day":24,"Note":"What is that","End":"2020-07-04", "Prio":"0", "Archive":false,"Begin":"2018-07-04", "Inprog":true, "PreInprog":true}
+        ,{"Name":"Fail bad for once", "Mon":"1,3,4,8,10", "Day":24,"Note":"And reflect about it.","More":false,"End":"2050-07-03", "Prio":"0", "Archive":false,"Color":"g","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}
+    ];
+    localStorage.dataList = JSON.stringify(dat);
+    localStorage.last_log_in_month = new Date().getMonth()+ 1;
+    localStorage.offline = true;
 }
 
+// if using online database
+if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
+    localStorage.server_url = 'http://localhost:3000/posts';
+    localStorage.info_url = 'http://localhost:3000/info';
+    console.log("Using json database");
+    // initialize
+    if (localStorage.dataList == null){
+        localStorage.last_log_in_month = new Date().getMonth()+ 1;
+        localStorage.offline = false;
+    }
+    let xhr = new XMLHttpRequest();
+    // make it synchronous
+    xhr.open('GET', localStorage.server_url , false);
+    xhr.onload = function() {
+      localStorage.dataList = this.responseText;
+    }
+    xhr.send();
+    // get user info
+    xhr = new XMLHttpRequest();
+    // make it synchronous
+    xhr.open('GET', localStorage.info_url , false);
+    xhr.onload = function() {
+      localStorage.last_log_in_month = JSON.parse(this.responseText)['last_log_in_month'];
+    }
+    xhr.send();
+}
+// cancel automatic log in function when logging out
+document.getElementById('log_out').addEventListener('click',function(){
+    localStorage.removeItem('offline');
+});
+
+// helper function when parsing data
 function addToNoDates(i){
     // No dates
     if (index_list[13] == null)
@@ -20,14 +59,17 @@ function addToNoDates(i){
     }
 }
 
-// reorganize modified datalist (Some are null)
+// remove null in the datalist (previously removed)
 var d_list = JSON.parse(localStorage.dataList);
+let temp_length = d_list.length;
 d_list = d_list.filter(item => item!=null);
-localStorage.dataList = JSON.stringify(d_list);
+// this only will be executed in offline mode
+if (temp_length > d_list.length)
+    localStorage.dataList = JSON.stringify(d_list);
 
-// populate data into a list
+// populate data into a local indexing list **************
 // 0~11: each month, 12: archived, 13: no dates,
-// 14: undone in current month, 15:undone in last month
+// 14: didn't finish last month, 15: didn't finish this month
 var index_list = [];
 for (var i = 0; i < d_list.length; i++){
     if (d_list[i]['Archive'] == true){
@@ -57,14 +99,15 @@ for (var i = 0; i < d_list.length; i++){
                     }
                 }
             }
-        // assign its progress of completion
-        if (d_list[i]['Done'] == null || d_list[i]['Done'] == false){
+        // collect tasks unfinished last month
+        if (d_list[i]['PreInprog'] != null && d_list[i]['PreInprog']){
             if (index_list[14] == null)
                 index_list[14] = [i];
             else
                 index_list[14].push(i);
         }
-        if (d_list[i]['Predone'] == null || d_list[i]['Predone'] == false){
+        // collect tasks unfinished this month
+        if (d_list[i]['Inprog'] != null && d_list[i]['Inprog']){
             if (index_list[15] == null)
                 index_list[15] = [i];
             else
@@ -73,15 +116,31 @@ for (var i = 0; i < d_list.length; i++){
     }
 }
 
-// reset "Inprog" attribute if a new month has come
+// Update the "PreInprog" and "Inprog" if a new month came
+// record unfinished tasks from last month
 var now = new Date();
-if (now.getMonth() + 1 > cur_mon){
+var cur_mon = now.getMonth() + 1;
+var last_use_month = JSON.parse(localStorage.last_log_in_month);
+if (cur_mon != last_use_month){
+    // update "Inprog" and "PreInprog" in this month
+    for(var i = 0; i < index_list[14].length; i++){
+        d_list[index_list[14][i]]['PreInprog'] = false;
+    }
+    // update the current "last month" progress
     for(var i = 0; i < index_list[15].length; i++){
-        d_list[index_list[15][i]]["PreInprog"] = d_list[index_list[15][i]]["Inprog"];
+        if (d_list[index_list[15][i]]["Inprog"] != null)
+            d_list[index_list[15][i]]["PreInprog"] = d_list[index_list[15][i]]["Inprog"];
+        else
+            d_list[index_list[15][i]]["PreInprog"] = false;
         d_list[index_list[15][i]]["Inprog"] = true;
     }
-    index_list[15] = index_list[14];
-    index_list[14] = [];
+    localStorage.last_log_in_month = new Date().getMonth() + 1;
+    // update the new month on the database
+    let payload = JSON.stringify({"last_log_in_month": localStorage.last_log_in_month})
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', "http://localhost:3000/info/", true);
+    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8')
+    xhr.send(payload);
 }
 
 // populate data in scroll_view
@@ -115,8 +174,10 @@ for (var i = 0; i < 12; i++){
         let progress = document.createElement('progress');
         if (cur_mon-1 != mon_index)
             progress.setAttribute('value',30);
-        else
-            progress.setAttribute('value',d_list[j]["Day"] - now.getDate());
+        else{
+            if (d_list[id]["Day"] != "")
+                progress.setAttribute('value',d_list[id]["Day"] - now.getDate());
+        }
         progress.setAttribute('max',30);
         liTag.appendChild(progress);
         ulTag.appendChild(liTag);
@@ -151,9 +212,9 @@ if (index_list[13] != null && index_list[13].length != 0){
         ulTag.appendChild(liTag);
     }
     no_dates.addEventListener('click',function(){
-        window.location.href = '/monthly.html?m=13&mon=No%20Dates&frommon=-1'
+        window.location.href = '/monthly.html?m=13&mon=No%20Month%20Assigned'
     });
-    scroll_view.style.height = '70vh';
+    scroll_view.style.height = '65vh';
 }
 
 // put indexed info in session storage
@@ -167,7 +228,7 @@ function hideAddBox(){
     addBox.style.visibility = 'none';
     addBox.style.opacity = 0;
     addBox.style.width = 0;
-    add.innerHTML = "Add";
+    add.innerHTML = "Add Item";
 }
 add.addEventListener('click',function(){
     if (addBox.style.opacity == 0){

@@ -3,7 +3,6 @@ var url = new URL(document.URL);
 let monName = url.searchParams.get("mon");
 var selectOrder = document.getElementById('order_by');
 // helpers for options
-var confirmDel =  document.getElementById('confirmDel');
 var delInd = document.getElementById('delInd');
 var delTag;
 var archMesg = document.getElementById('confirmAction');
@@ -87,6 +86,18 @@ function removeFromSession(ind){
         }
     }
 }
+function updateDatabase(ind,method){
+    // if using online mode
+    if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, localStorage.server_url + "/" + d_list[ind]["id"], true);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        if (method == "DELETE")
+            xhr.send();
+        else
+            xhr.send(JSON.stringify(d_list[ind]));
+    }
+}
 // write body
 var tbody = document.getElementById('tbody');
 tbody.innerHTML = "";
@@ -116,7 +127,9 @@ for (let i = 0; i < orderedList.length; i++){
         }
         else
             td = assignFontStyle(td,d_ind);
-        localStorage.dataList = JSON.stringify(d_list);
+
+        updateDatabase(d_ind,"PUT");
+        // localStorage.dataList = JSON.stringify(d_list);
     });
     // archive
     opts.children[0].children[1].addEventListener('click',function(){
@@ -126,19 +139,30 @@ for (let i = 0; i < orderedList.length; i++){
             archMesg.style.display = 'none';
         },700);
         archMesg.style.display = 'block';
-        localStorage.dataList = JSON.stringify(d_list);
+        // localStorage.dataList = JSON.stringify(d_list);
+        updateDatabase(d_ind,"PUT");
         removeFromSession(d_ind);
     });
     // delete
     opts.children[0].children[2].addEventListener('click',function(){
-        delInd.value = d_ind;
-        delTag = trTag;
-        confirmDel.style.display = 'inline-block';
+        if (window.confirm('This item will be deleted forever.')){
+            removeFromSession(d_ind);
+            updateDatabase(d_ind,"DELETE");
+            d_list[d_ind] = null;
+            trTag.style.display = 'none'
+            // localStorage.dataList = JSON.stringify(d_list);
+        }
     });
 
     trTag.appendChild(opts);
     tbody.appendChild(trTag);
 }
+// update to database changes made
+window.onbeforeunload = function(e) {
+    localStorage.dataList = JSON.stringify(d_list);
+    console.log("Local storage updated!");
+};
+
 
 // prompt to edit
 var edit = document.querySelectorAll('tr');
@@ -159,6 +183,7 @@ editBox.addEventListener('load',function(){
         editBox.contentDocument.getElementById(idName).addEventListener('click',function(){
             hideEditBox();
             location.reload();
+            //TODO:: remove reload()?
         });
     });
 });
@@ -212,19 +237,3 @@ selectOrder.addEventListener('input', function(){
     url.searchParams.append('sort',selectOrder.value);
     window.location.href = url.href;
 })
-
-// set up delete confirm box
-document.getElementById('cancelDel').addEventListener('click',function(){
-    confirmDel.style.display = 'none';
-    delInd.value = -1;
-    delTag = null;
-});
-document.getElementById('del-confirm').addEventListener('click',function(){
-    if (delInd.value > -1 && delTag != null){
-        confirmDel.style.display = 'none';
-        delTag.style.display = 'none';
-        removeFromSession(delInd.value);
-        d_list[delInd.value] = null;
-        localStorage.dataList = JSON.stringify(d_list);
-    }
-});

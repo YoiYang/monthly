@@ -17,6 +17,13 @@ form input{
     border: 1px solid lightgray;
 }
 button{
+    border-radius: 20px;
     width: 50vw;
     max-width: 300px
+}
+#offline{
+    background: transparent;
+    border: 1px solid #0687d8;
+    color: black;
+    font-size: 14px;
 }

@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
+    <script>
+        // continue using Monthly offline
+        if (localStorage.offline != null && JSON.parse(localStorage.offline))
+            window.location.href = "/yearly.html";
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Log in Monthly</title>
@@ -17,7 +22,7 @@
             <li><a href="/intro.html">Monthly</a></li>
             <li><a href="/index.html">Log in</a></li>
     </ul>
-    <h1>Monthly<sup>🈷</sup> User Log In</h1>
+    <h1>Log In Monthly<sup>🈷</sup></h1>
     <a href="intro.html"><img src="img/bg.png" alt="logo"></a>
 
     <form class="" action="/yearly.html">
@@ -27,17 +32,23 @@
         <label>Password<br></label>
         <input type="password" id="password" name="password" value="">
         <br>
-        <button style="font-size:18px" type="submit" id="button"name="button">
-            Log In
-        </button>
+        <button type="button" id="log_in" name="button">Log In</button>
+        <br>
+        <a href="forget.html">Forgot password</a> <a href="signup.html">Create account</a>
+        <br>
+        <br>
+        <button type="submit" id="offline" name="button">Use Monthly Offline</button>
     </form>
-    <br>
-    <a href="forget.html">Forgot password</a> <a href="signup.html">Create account</a>
-    <br>
 <footer>
     <hr>
     <p>&copy; Monthly. All rights reserved. 2018</p>
 </footer>
+<script>
+    document.getElementById('log_in').addEventListener('click',function(){
+        localStorage.offline = false;
+        window.location.href = "/yearly.html";
+    });
+</script>
     <!-- <script src="js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
@@ -51,5 +62,4 @@
 </script>
 <script src="https://www.google-analytics.com/analytics.js" async defer></script> -->
 </body>
-
 </html>

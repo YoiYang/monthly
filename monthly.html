@@ -14,8 +14,7 @@
     </noscript>
     <header>
         <ul class="navbar">
-            <li><a href="/yearly.html">Yearly</a></li>
-            <li id="log_out"><a href="/index.html">Log out</a></li>
+            <li><a href="/yearly.html">Back to Yearly</a></li>
         </ul>
     </header>
     <button type="button" name="button" id="cancel">Cancel</button>
@@ -29,17 +28,7 @@
                 <option value="Name">Name</option>
                 <option value="Inprog">Completion</option>
             </select>
-            <div id="confirmDel" class="confirmDel">
-                <form method="dialog">
-                    <section>
-                        <p>This item will be deleted forever.</p>
-                        <var id="delInd"></var>
-                        <button id="cancelDel" type="button">Cancel</button>
-                        <button type="button" id="del-confirm">Confirm</button>
-                    </section>
-                </form>
-            </div>
-            <div id="confirmAction" class="confirmDel">
+            <div id="confirmAction" class="messageBox">
                 <p>Archived!</p>
             </div>
         </caption>

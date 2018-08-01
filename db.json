@@ -1,19 +1,101 @@
 {
-  "posts": [
-    {
-      "id": 1,
-      "title": "json-server",
-      "author": "typicode"
-    }
-  ],
-  "comments": [
-    {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
-    }
-  ],
-  "profile": {
-    "name": "typicode"
+  "posts": [ {
+    "id": "1",
+    "Name": "Learn how to play Tennis",
+    "Mon": "1,3,5,7,8",
+    "Day": 31,
+    "Note": "I gladly wrote notes here",
+    "More": true,
+    "End": "2018-07-31",
+    "Prio": "2",
+    "Archive": false,
+    "Begin": "2018-07-04",
+    "Inprog": true
+  },
+  {
+    "id": "2",
+    "Name": "Read a book this month",
+    "Day": 30,
+    "Note": "some other notes",
+    "More": true,
+    "End": "2018-08-04",
+    "Prio": "3",
+    "Archive": false,
+    "Begin": "2018-07-04",
+    "PreInprog": false,
+    "Inprog": true
+  },
+  {
+    "id": "4",
+    "Name": "Contact someone I didn't contact for years",
+    "Mon": "5",
+    "Note": "I note here",
+    "More": true,
+    "End": "2018-07-31",
+    "Prio": "2",
+    "Archive": false,
+    "Begin": "2018-07-04",
+    "Inprog": true,
+    "PreInprog": false
+  },
+  {
+    "id": "5",
+    "Name": "Sleep enough at least two times a week",
+    "Mon": "5,8",
+    "Day": 13,
+    "Note": "Its true",
+    "More": true,
+    "End": "2018-07-05",
+    "Prio": "1",
+    "Archive": true,
+    "Color": "r",
+    "Begin": "2018-07-04",
+    "Inprog": false,
+    "PreInprog": true
+  },
+  {
+    "id": "6",
+    "Name": "Study AI programmings",
+    "Mon": "5,8,9,11",
+    "Day": "3",
+    "Note": "Machine Learning man! Oh Yeah! ???",
+    "More": false,
+    "End": "2018-07-04",
+    "Prio": "0",
+    "Archive": true,
+    "Color": "g",
+    "Begin": "2019-07-04",
+    "Inprog": false,
+    "PreInprog": true
+  },
+  {
+    "id": "7",
+    "Name": "Study anthropology",
+    "Mon": "1,2,3,10",
+    "Day": 24,
+    "Note": "What is that",
+    "End": "2020-07-04",
+    "Prio": "0",
+    "Archive": false,
+    "Begin": "2018-07-04",
+    "Inprog": true,
+    "PreInprog": true
+  },
+  {
+    "id": "9",
+    "Name": "Posting a new thing",
+    "Mon": "3,5,7,8",
+    "Day": 11,
+    "Note": "I gladly wrote notes here",
+    "More": true,
+    "End": "2016-07-31",
+    "Prio": "1",
+    "Archive": false,
+    "Begin": "2018-07-23",
+    "Inprog": true
+  }
+],
+  "info": {
+    "last_log_in_month": "8"
   }
 }
