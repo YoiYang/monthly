@@ -9,6 +9,20 @@
     <link rel="stylesheet" type="text/css" href="style/general.css"/>
     <link rel="stylesheet" type="text/css" href="style/index.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-auth.js"></script>
+    <script type="text/javascript">
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyD77J1VxgxPKF841VARqyJaII9eIcE0bkk",
+        authDomain: "monthly-d8c28.firebaseapp.com",
+        // databaseURL: "https://monthly-d8c28.firebaseio.com",
+        projectId: "monthly-d8c28",
+        storageBucket: "monthly-d8c28.appspot.com"
+    };
+    firebase.initializeApp(config);
+    </script>
 </head>
 <body>
     <!-- [if lte IE 9]>
@@ -20,7 +34,7 @@
     </ul>
     <h2>You will receive an email to reset your password</h2>
     <a href="/intro.html"><img src="img/bg.png" alt="logo"></a>
-    <form class="" action="/index.html">
+    <form class="" action="javascript:reset()">
         <label>Email<br></label>
         <input name="username" id="username" value="">
         <!-- <input type="button" id="button" name="sign_up_btn" value="Log in"> -->
@@ -46,5 +60,18 @@
 </script>
 <script src="https://www.google-analytics.com/analytics.js" async defer></script> -->
 </body>
+<script type="text/javascript">
+function reset(){
+    var auth = firebase.auth();
+    var emailAddress = document.getElementById('username').value;
+    auth.sendPasswordResetEmail(emailAddress).then(function() {
+        // Email sent.
+        alert('Email sent.');
+        window.location.href = "/index.html";
+    }).catch(function(error) {
+        alert(error.message);
+    });
+}
+</script>
 
 </html>

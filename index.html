@@ -1,11 +1,6 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
-    <script>
-        // continue using Monthly offline
-        if (localStorage.offline != null && JSON.parse(localStorage.offline))
-            window.location.href = "/yearly.html";
-    </script>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Log in Monthly</title>
@@ -13,53 +8,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="style/general.css"/>
     <link rel="stylesheet" type="text/css" href="style/index.css"/>
-</head>
-<body>
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-auth.js"></script>
+    <script type="text/javascript">
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyD77J1VxgxPKF841VARqyJaII9eIcE0bkk",
+            authDomain: "monthly-d8c28.firebaseapp.com",
+            // databaseURL: "https://monthly-d8c28.firebaseio.com",
+            projectId: "monthly-d8c28",
+            storageBucket: "monthly-d8c28.appspot.com"
+        };
+        firebase.initializeApp(config);
+
+        // continue using Monthly offline
+        if (localStorage.offline != null && JSON.parse(localStorage.offline))
+        window.location.href = "/yearly.html";
+        // continue using Monthly online
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                if(user.emailVerified){
+                    localStorage.offline = false;
+                    window.location.href = "/yearly.html";
+                }
+            } else {
+                // No user is signed in.
+            }
+        });
+        
+    </script>
+    </head>
+    <body>
     <!-- [if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
     <![endif] -->
     <ul class="navbar">
-            <li><a href="/intro.html">Monthly</a></li>
-            <li><a href="/index.html">Log in</a></li>
+        <li><a href="/intro.html">Monthly</a></li>
+        <li><a href="/index.html">Log in</a></li>
     </ul>
     <h1>Log In Monthly<sup>🈷</sup></h1>
-    <a href="intro.html"><img src="img/bg.png" alt="logo"></a>
+    <a href="intro.html"><img src="img/bg.png" alt="About Monthly"></a>
 
-    <form class="" action="/yearly.html">
+    <form class="" action="javascript:log_in()">
         <label>Username<br></label>
-        <input name="username" id="username" value="">
+        <input type="email" id="username" value="" required>
         <br>
         <label>Password<br></label>
-        <input type="password" id="password" name="password" value="">
+        <input type="password" id="password" name="password" value="" required autocomplete="on">
         <br>
-        <button type="button" id="log_in" name="button">Log In</button>
+        <button type="submit" id="log_in" name="button">Log In</button>
         <br>
         <a href="forget.html">Forgot password</a> <a href="signup.html">Create account</a>
         <br>
         <br>
-        <button type="submit" id="offline" name="button">Use Monthly Offline</button>
+        <button type="button" id="offline" name="button">Use Monthly Offline</button>
     </form>
-<footer>
-    <hr>
-    <p>&copy; Monthly. All rights reserved. 2018</p>
-</footer>
-<script>
-    document.getElementById('log_in').addEventListener('click',function(){
-        localStorage.offline = false;
-        window.location.href = "/yearly.html";
-    });
-</script>
-    <!-- <script src="js/vendor/modernizr-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script> -->
+    <footer>
+        <hr>
+        <p>&copy; Monthly. All rights reserved. 2018</p>
+    </footer>
+    <script type="text/javascript" src="js/index.js"></script>
 
-    <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
-    <!-- <script>
-    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-    ga('create', 'UA-XXXXX-Y', 'auto'); ga('send', 'pageview')
 </script>
-<script src="https://www.google-analytics.com/analytics.js" async defer></script> -->
 </body>
 </html>
