@@ -7,12 +7,26 @@
     <link rel="stylesheet" type="text/css" href="style/yearly.css"/>
     <link rel="icon" href="img/logo.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-auth.js"></script>
+    <script type="text/javascript">
+        // Initialize Firebase
+        var config = {
+          apiKey: "AIzaSyD77J1VxgxPKF841VARqyJaII9eIcE0bkk",
+          authDomain: "monthly-d8c28.firebaseapp.com",
+          // databaseURL: "https://monthly-d8c28.firebaseio.com",
+          projectId: "monthly-d8c28",
+          storageBucket: "monthly-d8c28.appspot.com"
+        };
+        firebase.initializeApp(config);
+    </script>
 </head>
 <body>
     <header>
         <ul class="navbar">
             <li><a href="/monthly.html?m=12&mon=Archived">Archive</a></li>
-            <li id="log_out"><a href="/index.html">Log out</a></li>
+            <li id="log_out">Log out</a></li>
         </ul>
     </header>
     <button type="button" id="add_item_btn">Add Item</button>

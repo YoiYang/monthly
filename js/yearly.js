@@ -1,6 +1,14 @@
-// TODO:: update cur_mon everytime log in
+document.getElementById('log_out').addEventListener('click',function(){
+    firebase.auth().signOut().then(function() {
+        window.location.href="/index.html";
+    }).catch(function(error) {
+        alert(error.message);
+    });
+    localStorage.removeItem('offline');
+});
 
 // import some sample data for user local use
+document.title = "Monthly (Offline)";
 if (localStorage.dataList == null && (localStorage.offline == null || JSON.parse(localStorage.offline)!=false)){
     console.log("Using local data");
     let dat = [
@@ -23,6 +31,7 @@ if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
     localStorage.server_url = 'http://localhost:3000/posts';
     localStorage.info_url = 'http://localhost:3000/info';
     console.log("Using json database");
+    document.title = "Monthly (Online)";
     // initialize
     if (localStorage.dataList == null){
         localStorage.last_log_in_month = new Date().getMonth()+ 1;
@@ -44,10 +53,6 @@ if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
     }
     xhr.send();
 }
-// cancel automatic log in function when logging out
-document.getElementById('log_out').addEventListener('click',function(){
-    localStorage.removeItem('offline');
-});
 
 // helper function when parsing data
 function addToNoDates(i){
