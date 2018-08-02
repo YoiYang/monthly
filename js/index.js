@@ -18,7 +18,7 @@ function log_in(){
       var errorMessage = error.message;
       // alert(errorCode);
       alert(errorMessage);
-    });
+  });
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
           console.log(user.emailVerified);
@@ -30,4 +30,4 @@ function log_in(){
     });
 
 
-};
+}

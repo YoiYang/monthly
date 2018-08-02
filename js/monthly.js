@@ -90,7 +90,7 @@ function updateDatabase(ind,method){
     // if using online mode
     if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
         let xhr = new XMLHttpRequest();
-        xhr.open(method, localStorage.server_url + "/" + d_list[ind]["id"], true);
+        xhr.open(method, localStorage.server_url.replace(".json","") + "/" + d_list[ind]["id"] + ".json", true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         if (method == "DELETE")
             xhr.send();

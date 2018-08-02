@@ -14,25 +14,25 @@ var moreBtn = document.getElementById('more');
 var more_blocks = document.getElementsByClassName('more_attrs');
 moreBtn.addEventListener('click',function(){
     if (more_blocks[0].style.display == 'none')
-        for (let i = 0; i < more_blocks.length; i++){
-            more_blocks[i].style.display = 'inline-block';
-        }
+    for (let i = 0; i < more_blocks.length; i++){
+        more_blocks[i].style.display = 'inline-block';
+    }
     else
-        for (let i = 0; i < more_blocks.length; i++){
-            more_blocks[i].style.display = 'none';
-        }
+    for (let i = 0; i < more_blocks.length; i++){
+        more_blocks[i].style.display = 'none';
+    }
 });
 
 // month checkboxes UI setup
 for (var i = 1; i < month_checkboxes.length; i++){
     month_checkboxes[i].addEventListener('input',function(){
         if (!this.checked)
-            month_checkboxes[0].checked = false;
+        month_checkboxes[0].checked = false;
     })
 }
 month_checkboxes[0].addEventListener('input', function(){
     for (var i = 1; i < month_checkboxes.length; i++)
-        month_checkboxes[i].checked = this.checked;
+    month_checkboxes[i].checked = this.checked;
 });
 
 // Days remain/passed auto-calculation
@@ -42,13 +42,18 @@ inp_f_date.addEventListener('input', calculateDays);
 inp_i_date.addEventListener('input', calculateDays);
 function calculateDays (evt) {
     if (inp_f_date.value != "")
-        remain.innerHTML=1+Math.floor((new Date(inp_f_date.value)-new Date())/(1000*60*60*24));
+    remain.innerHTML=1+Math.floor((new Date(inp_f_date.value)-new Date())/(1000*60*60*24));
     if (inp_i_date.value != "")
-        pass.innerHTML=Math.floor((new Date()-new Date(inp_i_date.value))/(1000*60*60*24))-1;
+    pass.innerHTML=Math.floor((new Date()-new Date(inp_i_date.value))/(1000*60*60*24))-1;
 }
 
 // fetch data
-var d_list = JSON.parse(localStorage.dataList);
+var d_list;
+if (localStorage.dataList == null)
+    d_list = [];
+else {
+    d_list = JSON.parse(localStorage.dataList);
+}
 let url = new URL(document.URL);
 if (url.searchParams.get("more") != null){
     for (let i = 0; i < more_blocks.length; i++){
@@ -64,13 +69,13 @@ if (url.searchParams.get("ind") != null && url.searchParams.get("ind") < d_list.
         let months = d_list[item_ind]['Mon'].split(',');
         for (var i = 0; i < months.length; i++){
             if (months[i] != "")
-                month_checkboxes[parseInt(months[i])].checked = true;
+            month_checkboxes[parseInt(months[i])].checked = true;
         }
         if (months.length == 12)
-            month_checkboxes[0].checked = true;
+        month_checkboxes[0].checked = true;
     }
     if (d_list[item_ind]['Day'] != null)
-        inp_day.value = parseInt(d_list[item_ind]['Day']);
+    inp_day.value = parseInt(d_list[item_ind]['Day']);
     inp_note.value = d_list[item_ind]['Note'];
     inp_i_date.value = d_list[item_ind]['Begin'];
     inp_f_date.value = d_list[item_ind]['End'];
@@ -94,7 +99,7 @@ function storeInfo(){
     if (item_ind == d_list.length){
         console.log("Creating new element");
         d_list[item_ind]= {
-            id: Math.random().toString(36).slice(2, 12),
+            // id: Math.random().toString(36).slice(2, 12),
             Name: "",
             Mon: "",
             Day: "",
@@ -111,19 +116,19 @@ function storeInfo(){
     d_list[item_ind]['Name'] = inp_name.value;
     d_list[item_ind]['Mon'] = "";
     if (month_checkboxes[0].checked == true)
-        d_list[item_ind]['Mon'] = "1,2,3,4,5,6,7,8,9,10,11,12";
+    d_list[item_ind]['Mon'] = "1,2,3,4,5,6,7,8,9,10,11,12";
     else{
         for (var i = 1; i < 13; i++){
             if (month_checkboxes[i].checked){
                 if (d_list[item_ind]['Mon'].length == 0)
-                    d_list[item_ind]['Mon'] += i;
+                d_list[item_ind]['Mon'] += i;
                 else
-                    d_list[item_ind]['Mon'] += (',' + i);
+                d_list[item_ind]['Mon'] += (',' + i);
             }
         }
     }
     if (inp_day.value.length > 0)
-        d_list[item_ind]['Day'] = inp_day.value;
+    d_list[item_ind]['Day'] = inp_day.value;
     d_list[item_ind]['Note'] = inp_note.value;
     d_list[item_ind]['Begin'] = inp_i_date.value;
     d_list[item_ind]['End'] = inp_f_date.value;
@@ -147,15 +152,24 @@ function updateDatabase(ind,method){
     if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
         let xhr = new XMLHttpRequest();
         // allow async
+        console.log(method +" "+  localStorage.server_url);
         if (method == "POST")
-            xhr.open(method, localStorage.server_url, true);
+            xhr.open(method, localStorage.server_url, false);
         else
-            xhr.open(method, localStorage.server_url + "/" + d_list[ind]["id"], true);
+            xhr.open(method, localStorage.server_url.replace(".json","") + "/" + d_list[ind]["id"] + ".json", false);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        xhr.onload = function () {
+            console.log(this.responseText);
+            console.log(this.responseText['name']);
+            d_list[ind]["id"] = this.responseText['name'];
+        }
         if (method == "DELETE")
             xhr.send();
-        else
+        else{
             xhr.send(JSON.stringify(d_list[ind]));
+            console.log("Sending payload");
+            console.log(JSON.stringify(d_list[ind]));
+        }
     }
 }
 // set up Save
@@ -180,48 +194,48 @@ function save_function(){
         (month_checkboxes[from_mon_ind] != null && month_checkboxes[from_mon_ind].checked == false))
         removeFromTheMonth();
 
-}
-// set up save_btn
-save_btn.addEventListener('mouseover',function(){
-    if (inp_name.value.trim() == ""){
-        save_btn.removeEventListener('click',save_function,false);
-        require.style.display = 'inline-block';
     }
-    else {
-        save_btn.addEventListener('click',save_function,false);
-    }
-});
-// set up Archive
-archive_btn.addEventListener('click',function(){
-    storeInfo();
-    d_list[item_ind]["Archive"] = !d_list[item_ind]["Archive"];
-    updateDatabase(item_ind,"PUT");
-    localStorage.dataList = JSON.stringify(d_list);
-    removeFromTheMonth();
-});
-// set up Delete
-// var popup =  document.getElementById('confirmDel');
-document.getElementById('delete').addEventListener('click',function(){
-    if (window.confirm("This item will be deleted forever.")){
-        if (item_ind < d_list.length){
-            // if deleting an existing item
-            updateDatabase(item_ind,"DELETE");
-            d_list[item_ind] = null;
-            localStorage.dataList = JSON.stringify(d_list);
-            removeFromTheMonth();
+    // set up save_btn
+    save_btn.addEventListener('mouseover',function(){
+        if (inp_name.value.trim() == ""){
+            save_btn.removeEventListener('click',save_function,false);
+            require.style.display = 'inline-block';
         }
-    }
-});
-// set up Check
-check_btn.addEventListener('click',function(){
-    storeInfo();
-    d_list[item_ind]["Inprog"] = !d_list[item_ind]["Inprog"];
-    updateDatabase(item_ind,"PUT");
-    localStorage.dataList = JSON.stringify(d_list);
-    if(!d_list[item_ind]["Inprog"]){
-        check_btn.style.background = '#b7e3ff';
-    }
-    else {
-        check_btn.style.background = 'transparent';
-    }
-});
+        else {
+            save_btn.addEventListener('click',save_function,false);
+        }
+    });
+    // set up Archive
+    archive_btn.addEventListener('click',function(){
+        storeInfo();
+        d_list[item_ind]["Archive"] = !d_list[item_ind]["Archive"];
+        updateDatabase(item_ind,"PUT");
+        localStorage.dataList = JSON.stringify(d_list);
+        removeFromTheMonth();
+    });
+    // set up Delete
+    // var popup =  document.getElementById('confirmDel');
+    document.getElementById('delete').addEventListener('click',function(){
+        if (window.confirm("This item will be deleted forever.")){
+            if (item_ind < d_list.length){
+                // if deleting an existing item
+                updateDatabase(item_ind,"DELETE");
+                d_list[item_ind] = null;
+                localStorage.dataList = JSON.stringify(d_list);
+                removeFromTheMonth();
+            }
+        }
+    });
+    // set up Check
+    check_btn.addEventListener('click',function(){
+        storeInfo();
+        d_list[item_ind]["Inprog"] = !d_list[item_ind]["Inprog"];
+        updateDatabase(item_ind,"PUT");
+        localStorage.dataList = JSON.stringify(d_list);
+        if(!d_list[item_ind]["Inprog"]){
+            check_btn.style.background = '#b7e3ff';
+        }
+        else {
+            check_btn.style.background = 'transparent';
+        }
+    });

@@ -1,3 +1,14 @@
+var sample_dat = [
+    {"Name":"Learn how to play Tennis", "Mon":"1,3,5,7,8","Day":31, "Note":"I gladly wrote notes here","More":true,"End":"2018-07-31","Prio":"2","Archive":false,"Begin":"2018-07-04","Inprog":true}
+    ,{"Name":"Read a book this month","Day":30,"Note":"some other notes", "More":true,"End":"2018-08-04","Prio":"3", "Archive":false,"Begin":"2018-07-04","PreInprog":false}
+    ,{"Name":"Appreciate your achivements", "Mon":"1,5,6,8","Day":15,"Note":"I should take notes here", "More":false,"Archive":false,"Begin":"2018-07-04", "End":"2018-10-04","Inprog":true}
+    ,{"Name":"Contact someone I didn\'t contact for years", "Mon":"5","Note":"I note here", "More":true,"End":"2018-07-31", "Prio":"2","Archive":false,"Begin":"2018-07-04", "Inprog":true,"PreInprog":false}
+    ,{"Name":"Sleep enough at least two times a week", "Mon":"5,8","Day":13,"Note":"It\'s true","More": true, "End":"2018-07-05",  "Prio":"1","Archive":true, "Color":"r", "Begin":"2018-07-04", "Inprog":false,"PreInprog":true}
+    , {"Name":"Study AI programming ", "Mon":"5,8,9,11", "Day":3,"Note":"Machine Learning man! Oh Yeah! ???","More":false,"End":"2018-07-04", "Prio":"0", "Archive":true,"Color":"g","Begin":"2018-07-04","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}
+    , {"Name":"Study anthropology", "Mon":"1,2,3,10", "Day":24,"Note":"What is that","End":"2020-07-04", "Prio":"0", "Archive":false,"Begin":"2018-07-04", "Inprog":true, "PreInprog":true}
+    ,{"Name":"Fail bad for once", "Mon":"1,3,4,8,10", "Day":24,"Note":"And reflect about it.","More":false,"End":"2050-07-03", "Prio":"0", "Archive":false,"Color":"g","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}
+];
+// log out fuction
 document.getElementById('log_out').addEventListener('click',function(){
     firebase.auth().signOut().then(function() {
         window.location.href="/index.html";
@@ -11,59 +22,78 @@ document.getElementById('log_out').addEventListener('click',function(){
 document.title = "Monthly (Offline)";
 if (localStorage.dataList == null && (localStorage.offline == null || JSON.parse(localStorage.offline)!=false)){
     console.log("Using local data");
-    let dat = [
-        {"Name":"Learn how to play Tennis", "Mon":"1,3,5,7,8","Day":31, "Note":"I gladly wrote notes here","More":true,"End":"2018-07-31","Prio":"2","Archive":false,"Begin":"2018-07-04","Inprog":true}
-        ,{"Name":"Read a book this month","Day":30,"Note":"some other notes", "More":true,"End":"2018-08-04","Prio":"3", "Archive":false,"Begin":"2018-07-04","PreInprog":false}
-        ,{"Name":"Appreciate your achivements", "Mon":"1,5,6,8","Day":15,"Note":"I should take notes here", "More":false,"Archive":false,"Begin":"2018-07-04", "End":"2018-10-04","Inprog":true}
-        ,{"Name":"Contact someone I didn\'t contact for years", "Mon":"5","Note":"I note here", "More":true,"End":"2018-07-31", "Prio":"2","Archive":false,"Begin":"2018-07-04", "Inprog":true,"PreInprog":false}
-        ,{"Name":"Sleep enough at least two times a week", "Mon":"5,8","Day":13,"Note":"It\'s true","More": true, "End":"2018-07-05",  "Prio":"1","Archive":true, "Color":"r", "Begin":"2018-07-04", "Inprog":false,"PreInprog":true}
-        , {"Name":"Study AI programming ", "Mon":"5,8,9,11", "Day":3,"Note":"Machine Learning man! Oh Yeah! ???","More":false,"End":"2018-07-04", "Prio":"0", "Archive":true,"Color":"g","Begin":"2018-07-04","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}
-        , {"Name":"Study anthropology", "Mon":"1,2,3,10", "Day":24,"Note":"What is that","End":"2020-07-04", "Prio":"0", "Archive":false,"Begin":"2018-07-04", "Inprog":true, "PreInprog":true}
-        ,{"Name":"Fail bad for once", "Mon":"1,3,4,8,10", "Day":24,"Note":"And reflect about it.","More":false,"End":"2050-07-03", "Prio":"0", "Archive":false,"Color":"g","Begin":"2019-07-04", "Inprog":false, "PreInprog":true}
-    ];
-    localStorage.dataList = JSON.stringify(dat);
+    localStorage.dataList = JSON.stringify(sample_dat);
     localStorage.last_log_in_month = new Date().getMonth()+ 1;
     localStorage.offline = true;
 }
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+      // if using online database
+      if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
+          document.title = "Monthly (Online)";
+          // initialize
+          if (localStorage.dataList == null){
+              localStorage.last_log_in_month = new Date().getMonth()+ 1;
+              localStorage.offline = false;
+          }
+          localStorage.server_url = 'https://monthly-d8c28.firebaseio.com/users/'
+           + user.email.replace(/@.*/, "") + "/posts.json";
+          localStorage.info_url = 'https://monthly-d8c28.firebaseio.com/users/'+ user.email.replace(/@.*/, "") + "/info.json";
+          console.log("Using json database");
+          let xhr = new XMLHttpRequest();
+          // make it synchronous
+          xhr.open('GET', localStorage.server_url , false);
+          xhr.onload = function() {
+            // process the data into compatable formData
+            let tempJSON = JSON.parse(this.responseText);
+            if (tempJSON != null){
+                console.log(tempJSON);
+                let values = Object.values(tempJSON);
+                let keys = Object.keys(tempJSON);
+                for (var i = 0; i < values.length; i++){
+                    values[i]['id'] = keys[i];
+                }
+                localStorage.dataList = JSON.stringify(values);
+            }else{
+                // new firebase user
+                let xhr = new XMLHttpRequest();
+                // make it synchronous
+                xhr.open('PUT', 'https://monthly-d8c28.firebaseio.com/users/'
+                 + user.email.replace(/@.*/, "") + ".json" , false);
+                xhr.onload = function(){
+                        console.log(this.responseText);
+                }
+                xhr.send(JSON.stringify({posts: sample_dat}));
+                xhr = new XMLHttpRequest();
+               // make it synchronous
+               xhr.open('PUT', localStorage.info_url , false);
+               xhr.onload = function(){
+                       console.log(this.responseText);
+                       location.reload();
+               }
+               xhr.send(JSON.stringify({"last_log_in_month": new Date().getMonth() + 1}));
+            }
 
-// if using online database
-if (localStorage.offline != null && !JSON.parse(localStorage.offline)){
-    localStorage.server_url = 'http://localhost:3000/posts';
-    localStorage.info_url = 'http://localhost:3000/info';
-    console.log("Using json database");
-    document.title = "Monthly (Online)";
-    // initialize
-    if (localStorage.dataList == null){
-        localStorage.last_log_in_month = new Date().getMonth()+ 1;
-        localStorage.offline = false;
-    }
-    let xhr = new XMLHttpRequest();
-    // make it synchronous
-    xhr.open('GET', localStorage.server_url , false);
-    xhr.onload = function() {
-      localStorage.dataList = this.responseText;
-    }
-    xhr.send();
-    // get user info
-    xhr = new XMLHttpRequest();
-    // make it synchronous
-    xhr.open('GET', localStorage.info_url , false);
-    xhr.onload = function() {
-      localStorage.last_log_in_month = JSON.parse(this.responseText)['last_log_in_month'];
-    }
-    xhr.send();
+          }
+          xhr.send();
+          // get user info
+          xhr = new XMLHttpRequest();
+          // make it synchronous
+          xhr.open('GET', localStorage.info_url , false);
+          xhr.onload = function() {
+            localStorage.last_log_in_month = JSON.parse(this.responseText)['last_log_in_month'];
+          }
+          xhr.send();
+          init();
+      }
+  }
+});
+
+if (localStorage.offline == null || JSON.parse(localStorage.offline)!=false){
+    init()
 }
 
-// helper function when parsing data
-function addToNoDates(i){
-    // No dates
-    if (index_list[13] == null)
-        index_list[13] = [i];
-    else {
-        index_list[13].push(i);
-    }
-}
-
+function init(){
 // remove null in the datalist (previously removed)
 var d_list = JSON.parse(localStorage.dataList);
 let temp_length = d_list.length;
@@ -87,12 +117,22 @@ for (var i = 0; i < d_list.length; i++){
     }
     else{
         if (d_list[i]['Mon'] == null){
-            addToNoDates(i);
+            // No dates
+            if (index_list[13] == null)
+                index_list[13] = [i];
+            else {
+                index_list[13].push(i);
+            }
         }
         else{
             let ms = d_list[i]['Mon'].split(',');
             if (ms[0] == "")
-                addToNoDates(i);
+            // No dates
+            if (index_list[13] == null)
+                index_list[13] = [i];
+            else {
+                index_list[13].push(i);
+            }
                 else{
                     // assign its months to the list
                     for (let ii in ms){
@@ -125,7 +165,7 @@ for (var i = 0; i < d_list.length; i++){
 // record unfinished tasks from last month
 var now = new Date();
 var cur_mon = now.getMonth() + 1;
-var last_use_month = JSON.parse(localStorage.last_log_in_month);
+var last_use_month = (localStorage.last_log_in_month == null) ? null : JSON.parse(localStorage.last_log_in_month);
 if (cur_mon != last_use_month){
     // update "Inprog" and "PreInprog" in this month
     for(var i = 0; i < index_list[14].length; i++){
@@ -143,7 +183,7 @@ if (cur_mon != last_use_month){
     // update the new month on the database
     let payload = JSON.stringify({"last_log_in_month": localStorage.last_log_in_month})
     let xhr = new XMLHttpRequest();
-    xhr.open('PUT', "http://localhost:3000/info/", true);
+    xhr.open('PUT', localStorage.info_url, true);
     xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8')
     xhr.send(payload);
 }
@@ -229,12 +269,6 @@ sessionStorage.index_list = JSON.stringify(index_list);
 var add = document.getElementById('add_item_btn');
 // set add item iframe
 var addBox = document.getElementById('add_item_info');
-function hideAddBox(){
-    addBox.style.visibility = 'none';
-    addBox.style.opacity = 0;
-    addBox.style.width = 0;
-    add.innerHTML = "Add Item";
-}
 add.addEventListener('click',function(){
     if (addBox.style.opacity == 0){
         addBox.style.opacity = 1
@@ -274,3 +308,10 @@ addBox.addEventListener('load',function(){
         location.reload();
     });
 });
+function hideAddBox(){
+    // addBox.style.visibility = 'none';
+    addBox.style.opacity = 0;
+    addBox.style.width = 0;
+    add.innerHTML = "Add Item";
+}
+}
