@@ -192,7 +192,7 @@ for (let i = 1; i < edit.length; i++){
     let col2_tag = edit[i].children[1];
     name_tag.addEventListener('click',function(){
         editBox.src = url.href.substr(0,url.href.indexOf('month')) +
-        '/item.html?ind='+orderedList[i-1]+ "&frommon=" + (mon_ind+1)+ "&more";
+        'item.html?ind='+orderedList[i-1]+ "&frommon=" + (mon_ind+1)+ "&more";
 
         if (editBox.style.opacity == 0){
             editBox.style.opacity = 1
@@ -207,7 +207,7 @@ for (let i = 1; i < edit.length; i++){
     });
     col2_tag.addEventListener('click',function(){
         editBox.src = url.href.substr(0,url.href.indexOf('month')) +
-        '/item.html?ind='+orderedList[i-1]+ "&frommon=" + (mon_ind+1);
+        'item.html?ind='+orderedList[i-1]+ "&frommon=" + (mon_ind+1);
     });
     edit[i].addEventListener('mouseover',function(){
         temp_name = name_tag.innerHTML;

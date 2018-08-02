@@ -1,3 +1,8 @@
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', function() {
+//     navigator.serviceWorker.register('/service-worker.js');
+//   });
+// }
 var sample_dat = [
     {"Name":"Learn how to play Tennis", "Mon":"1,3,5,7,8","Day":31, "Note":"I gladly wrote notes here","More":true,"End":"2018-07-31","Prio":"2","Archive":false,"Begin":"2018-07-04","Inprog":true}
     ,{"Name":"Read a book this month","Day":30,"Note":"some other notes", "More":true,"End":"2018-08-04","Prio":"3", "Archive":false,"Begin":"2018-07-04","PreInprog":false}
@@ -17,6 +22,15 @@ document.getElementById('log_out').addEventListener('click',function(){
     });
     localStorage.removeItem('offline');
 });
+
+//theme_choice
+document.getElementById('theme').onclick = function () {
+    let select = document.getElementById('theme_choice');
+    if (select.href.indexOf('general2') != -1)
+        select.href = '/style/general.css';
+    else
+        select.href = '/style/general2.css';
+};
 
 // import some sample data for user local use
 document.title = "Monthly (Offline)";

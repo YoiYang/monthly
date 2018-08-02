@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+*{
+    font-family: 'PT Sans-Bold', sans-serif;
+    color: black;
+}
+.small_icon {display:none;}
+.icon{
+    display:block;
+    padding: 0 15px;
+}
+@media (max-width: 680px) {
+    .small_icon {display:block;}
+    .icon{display:none;}
+}
+@media (min-width: 800px) {
+    :not(small):not(h2){
+        font-size: 18px;
+    }
+}
+body{
+    margin: 0;
+    padding-bottom: 10px;
+}
+.navbar{
+    list-style-type: none;
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 0;
+    text-align: center;
+    border-top: 5px solid #d81f06;
+}
+.navbar li {
+    display: inline-block;
+    padding: 15px 0;
+    border-bottom: 5px solid transparent;
+    transition: 0.15s linear;
+    font-weight:300;
+}
+
+.navbar li:hover {
+    border-bottom: 5px solid #ff6d6d;
+    font-weight: bolder;
+}
+.navbar a{
+    padding: 10px;
+    text-decoration: none;
+    overflow: hidden;
+}
+/* IDEA: This one may be removed */
+button{
+    background-color: #d80606;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    text-decoration: none;
+    display: inline-block;
+    border: 0;
+    font-size: 18px;
+    transition: 0.1s linear;
+    position: relative;
+    z-index:10;
+}
+button:hover {
+    background-color: #fc5050;
+    box-shadow: 1px 1px 2px steelblue;
+}
+select{
+    border: 1px solid lightgray;
+}
+iframe{
+    margin: 10px 0 0 0;
+    left: 50%;
+    transform: translateX(-50%);
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+    z-index:12;
+    border: 0;
+    width: 80%;
+    transition: opacity 0.3s linear;
+    height: 80%;
+}

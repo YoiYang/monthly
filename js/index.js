@@ -1,5 +1,8 @@
-
-
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', function() {
+//     navigator.serviceWorker.register('/service-worker.js');
+//   });
+// }
 
 var url = new URL(document.URL);
 let email = url.searchParams.get("email");
